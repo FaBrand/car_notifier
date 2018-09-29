@@ -1,4 +1,5 @@
-from app import app, bmw_rent_app
+from app import app
+from app.model import *
 
 
 @app.shell_context_processor

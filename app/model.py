@@ -96,8 +96,32 @@ class Car:
         return self.__details['shortDescr']
 
     @property
+    def description(self):
+        return self.__details['wwwDescr']
+
+    @property
     def data(self):
         return self.__data
+
+    @property
+    def details(self):
+        return self.__details
+
+    @property
+    def price(self):
+        return float(self.__data['price'])
+
+    def __repr__(self):
+        return '<Car {}>'.format(self.name)
+
+    def __str__(self):
+        return '<Car {}>'.format(self.name)
+
+    def __eq__(self, other):
+        return self.__data['Id'] == other.__data['Id']
+
+    def __hash__(self):
+        return hash(self.__data['Id'])
 
 
 class CarSelector:
@@ -107,12 +131,22 @@ class CarSelector:
         self.__cars = list()
 
     def set_car_list(self, car_list):
+        assert car_list is not None, 'Must be not none'
         self.__car_list = car_list
 
     def set_car_description(self, car_description):
+        assert car_description is not None, 'Must be not none'
         self.__car_description = car_description
 
+    def load_from_file(self):
+        with open('car_list.json', 'r') as f:
+            self.set_car_list(json.load(f))
+
+        with open('car_description.json', 'r') as f:
+            self.set_car_description(json.load(f))
+
     def read_cars(self):
+        self.__cars = list()
         for car in self.__car_list['rentObjects']:
             c = Car(car, self.__get_details(car))
             self.__cars.append(c)
@@ -125,16 +159,51 @@ class CarSelector:
         return self.__cars
 
 
-connector = BmwRent()
-connector.login()
-connector.load_data()
-connector.write_to_file()
+class CarDiffCalculator:
+    def __init__(self):
+        self.__con = BmwRent()
+        self.__on_new_cars = lambda x: x
+        self.__added_cars = set()
+        self.__removed_cars = set()
+
+        self.__connector = BmwRent()
+
+        self.__existing_car_selector = CarSelector()
+        self.__existing_car_selector.load_from_file()
+        self.__existing_car_selector.read_cars()
+
+    def set_callback_on_new_cars(self, callback):
+        assert callable(callback), 'Can only set a callable object'
+        self.__on_new_cars = callback
+
+    def calculate_changes(self):
+        self.__con.login()
+        self.__con.load_data()
+
+        online_cars = CarSelector()
+        online_cars.set_car_list(self.__con.car_list)
+        online_cars.set_car_description(self.__con.car_description)
+        online_cars.read_cars()
+
+        last_known_cars = set(self.__existing_car_selector.cars)
+        cars_online = set(online_cars.cars)
+
+        self.__added_cars = cars_online - last_known_cars
+        self.__removed_cars = last_known_cars - cars_online
+
+        if self.__added_cars:
+            self.__on_new_cars(self.__added_cars)
+
+    def update_files(self):
+        self.__con.write_to_file()
+
+    @property
+    def removed_cars(self):
+        return self.__removed_cars
+
+    @property
+    def added_cars(self):
+        return self.__added_cars
+
 
 car_selector = CarSelector()
-with open('car_list.json', 'r') as f:
-    car_selector.set_car_list(json.load(f))
-
-with open('car_description.json', 'r') as f:
-    car_selector.set_car_description(json.load(f))
-car_selector.read_cars()
-
