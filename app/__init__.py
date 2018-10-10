@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 app = Flask(__name__)
-# app.config.from_object(Config)
+app.config.from_object(Config)
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
