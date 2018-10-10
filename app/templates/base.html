@@ -2,15 +2,16 @@
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 <div class="container">
-  <a class="navbar-brand" href="{{ url_for('index') }}">BmwRent Booking Tool</a>
+  <a class="navbar-brand" href="{{ url_for('index') }}">
+      <img src="https://mm-portal.bmw-on-demand.de/resources/pictures/stuffrent/logo.png" alt="" height="40">
+  </a>
 
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav mr-auto pull-left">
             <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Overview</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('reload') }}">Reload</a></li>
         </ul>

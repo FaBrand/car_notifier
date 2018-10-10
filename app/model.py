@@ -11,6 +11,12 @@ class CarDescription(db.Model):
     wwwDescr = db.Column(db.String(120), index=True)
     ClassificationTypeId = db.Column(db.Integer)
 
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
+
     @classmethod
     def FromJson(cls, json):
         element = cls()
@@ -35,6 +41,12 @@ class CarEntry(db.Model):
     fuelType = db.Column(db.String(120))
     PS = db.Column(db.Float)
     bookings = db.relationship('Booking', backref='car')
+
+    def __eq__(self, other):
+        return self.Id == other.Id
+
+    def __hash__(self):
+        return hash(self.Id)
 
     @classmethod
     def FromJson(cls, json):
@@ -67,6 +79,12 @@ class Booking(db.Model):
     originCo = db.Column(db.DateTime)
     IsOwn = db.Column(db.Boolean)
     CheckInPositionId = db.Column(db.Integer)
+
+    def __eq__(self, other):
+        return self.Id == other.Id
+
+    def __hash__(self):
+        return hash(self.Id)
 
     @classmethod
     def FromJson(cls, json):

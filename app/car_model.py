@@ -27,6 +27,7 @@ class BmwRent:
     def __init__(self):
         self.__car_list = json.loads('{}')
         self.__car_description = json.loads('{}')
+        self.__station_data = {}
         self.__cookie = {}
 
     def post_data(self, url, **kwargs):
@@ -69,6 +70,47 @@ class BmwRent:
         self.__car_description = self.post_data(
             'https://mm-portal.bmw-on-demand.de/service/masterdata/classifications.jsp',
             params={'_dc': str(int(round(time.time() * 1000)))}).json()
+        self.__load_details()
+
+    def __load_details(self):
+        html_response = self.post_data('https://mm-portal.bmw-on-demand.de/index.do', params={'action': 'display'})
+        if html_response.status_code != 200:
+            raise Exception('Could net retrieve response from index.do')
+
+        in_master_data = False
+        data = dict()
+        data_rex = re.compile('^\s*\w+\s*=\s*[{[].+;$')
+        for line in html_response.text.splitlines():
+            if 'MASTER DATA' in line:
+                in_master_data = True
+            if 'userFieldsMap' in line:
+                break
+
+            if in_master_data and data_rex.match(line):
+                key, val = [w.strip() for w in line.split('=', 1)]
+                data[key] = val.rstrip(';')
+
+        for key, val in data.items():
+            data[key] = json.loads(val)
+
+        self.__parse_details(data)
+
+    def __parse_details(self, data):
+        self.__station_data = data['stationData']
+        self.__station_opening_hours = data['statHourBusData']
+        self.__vehicle_detail_data = data['rentObjData']
+
+    @property
+    def station_data(self):
+        return self.__station_data
+
+    @property
+    def station_opening_hours(self):
+        return self.__station_opening_hours
+
+    @property
+    def vehicle_detail_data(self):
+        return self.__vehicle_detail_data
 
     @property
     def car_description(self):

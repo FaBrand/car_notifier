@@ -109,3 +109,4 @@ app.db
 
 .idea
 *.json
+*.har
