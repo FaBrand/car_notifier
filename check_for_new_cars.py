@@ -1,5 +1,5 @@
 from __future__ import print_function
-from app.model import CarDiffCalculator
+from app.car_model import CarDiffCalculator
 from datetime import datetime
 import smtplib
 import os
