@@ -5,8 +5,8 @@ set -e pipefail
 
 pip install -r requirements.txt
 
-flask init
-flask migrate
-flask upgrade
+flask db init
+flask db migrate
+flask db upgrade
 flask run
 
