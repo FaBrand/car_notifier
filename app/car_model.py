@@ -25,7 +25,8 @@ class BmwRent:
     }
 
     def __init__(self):
-        self.__car_list = json.loads('{}')
+        self.__car_list = list()
+        self.__bookings = list()
         self.__car_description = json.loads('{}')
         self.__station_data = {}
         self.__cookie = {}
@@ -62,15 +63,22 @@ class BmwRent:
 
         print('Successfully logged in (Anonymous)')
 
-    def load_data(self):
-        self.__car_list = self.post_data('https://mm-portal.bmw-on-demand.de/master.do?action=disposition',
+    def __load_station(self, stationId):
+        response = self.post_data('https://mm-portal.bmw-on-demand.de/master.do?action=disposition',
                                          params={'action': 'disposition'},
-                                         data='stationId=50585').json()
+                                         data='stationId={}'.format(stationId)).json()
+        self.__car_list.extend(response['rentObjects'])
+        self.__bookings.extend(response['rentObjTransacts'])
+        print('Loaded cars from station with id {}'.format(stationId))
+
+    def load_data(self):
+        self.__load_details()
+        for station in self.station_data:
+            self.__load_station(station['stationId'])
 
         self.__car_description = self.post_data(
             'https://mm-portal.bmw-on-demand.de/service/masterdata/classifications.jsp',
             params={'_dc': str(int(round(time.time() * 1000)))}).json()
-        self.__load_details()
 
     def __load_details(self):
         html_response = self.post_data('https://mm-portal.bmw-on-demand.de/index.do', params={'action': 'display'})
@@ -120,9 +128,13 @@ class BmwRent:
     def car_list(self):
         return self.__car_list
 
+    @property
+    def bookings(self):
+        return self.__bookings
+
     def write_to_file(self):
         with open('car_list.json', 'w') as f:
-            json.dump(self.__car_list, f)
+            json.dump({'rentObjects': self.__car_list, 'rentObjTransacts': self.__bookings}, f)
 
         with open('car_description.json', 'w') as f:
             json.dump(self.__car_description, f)
@@ -168,7 +180,8 @@ class Car:
 
 class CarSelector:
     def __init__(self):
-        self.__car_list = None
+        self.__car_list = list()
+        self.__bookings = list()
         self.__car_description = None
         self.__cars = list()
 
@@ -189,7 +202,7 @@ class CarSelector:
 
     def read_cars(self):
         self.__cars = list()
-        for car in self.__car_list['rentObjects']:
+        for car in self.__car_list:
             c = Car(car, self.__get_details(car))
             self.__cars.append(c)
 

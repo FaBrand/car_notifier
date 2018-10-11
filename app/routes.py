@@ -28,9 +28,9 @@ def reload():
         connector.login()
         connector.load_data()
 
-        new_cars, deleted_cars = updateDatabase(CarEntry, connector.car_list['rentObjects'])
+        new_cars, deleted_cars = updateDatabase(CarEntry, connector.car_list)
         new_descriptions, deleted_descriptions = updateDatabase(CarDescription, connector.car_description)
-        new_bookings, deleted_bookins = updateDatabase(Booking, connector.car_list['rentObjTransacts'])
+        new_bookings, deleted_bookings = updateDatabase(Booking, connector.bookings)
 
         db.session.commit()
 
