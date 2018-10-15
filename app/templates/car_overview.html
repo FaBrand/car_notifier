@@ -5,7 +5,7 @@
     {% if cars %}
         {% for car in cars %}
         <div class="card bg-light mb-3" style="width: 18%; margin:5px 1%;">
-            <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+            <img class="card-img-top" src="{{ car.image.outside_large }}" alt="Card image cap">
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <div>

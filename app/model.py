@@ -31,7 +31,8 @@ class CarEntry(db.Model):
     Id = db.Column(db.Integer, primary_key=True)
     classificationId = db.Column(db.Integer, db.ForeignKey('car_description.id'))
     description = db.relationship('CarDescription', uselist=False)
-    # image = db.relationship('CarImage', uselist=False)
+    carImageId = db.Column(db.Integer, db.ForeignKey('car_image.id'))
+    image = db.relationship('CarImage', uselist=False)
     classificationGroupingId = db.Column(db.Integer)
     Kilowatt = db.Column(db.Float)
     stationId = db.Column(db.Integer)
@@ -53,6 +54,7 @@ class CarEntry(db.Model):
     def FromJson(cls, json):
         element = cls()
         element.Id = int(json['Id'])
+        element.carImageId = int(json['Id'])
         element.classificationId = int(json['classificationId'])
         element.classificationGroupingId = int(json['classificationGroupingId'])
         element.Kilowatt = float(json['Kilowatt'])
@@ -68,26 +70,26 @@ class CarEntry(db.Model):
 
 
 
-# class CarImage(db.Model):
-#     id = db.Column(db.Integer, db.ForeignKey('car_entry.id'), primary_key=True)
-#     interieur = db.Column(db.String(1200))
-#     outside_large = db.Column(db.String(1200))
-#     outside_small = db.Column(db.String(1200))
+class CarImage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    interieur = db.Column(db.String(1200))
+    outside_large = db.Column(db.String(1200))
+    outside_small = db.Column(db.String(1200))
 
-#     def __eq__(self, other):
-#         return self.id == other.id
+    def __eq__(self, other):
+        return self.id == other.id
 
-#     def __hash__(self):
-#         return hash(self.id)
+    def __hash__(self):
+        return hash(self.id)
 
-#     @classmethod
-#     def FromJson(cls, json):
-#         element = cls()
-#         element.id = int(json['Id'])
-#         element.interieur = json['urlO']
-#         element.outside_large = json['urlI']
-#         element.outside_small = json['urlT']
-#         return element
+    @classmethod
+    def FromJson(cls, json):
+        element = cls()
+        element.id = int(json['Id'])
+        element.interieur = json['urlO']
+        element.outside_large = json['urlI']
+        element.outside_small = json['urlT']
+        return element
 
 
 class Booking(db.Model):

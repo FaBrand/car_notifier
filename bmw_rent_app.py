@@ -1,6 +1,5 @@
 from app import app, db
-from app.model import CarEntry, Booking, CarDescription
-# from app.model import CarImage
+from app.model import CarEntry, Booking, CarDescription, CarImage
 from app.car_model import *
 from pprint import pprint
 
@@ -16,7 +15,7 @@ def make_shell_context():
             'CarSelector': CarSelector,
             'CarDescription': CarDescription,
             'CarEntry': CarEntry,
-            # 'CarImage': CarImage,
+            'CarImage': CarImage,
             'Booking': Booking,
             'db' : db,
            }
