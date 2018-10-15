@@ -68,8 +68,6 @@ class CarEntry(db.Model):
         return element
 
 
-
-
 class CarImage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     interieur = db.Column(db.String(1200))

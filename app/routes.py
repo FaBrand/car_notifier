@@ -22,6 +22,16 @@ def updateDatabase(Entry, new_list):
 
     return (new_entries, deleted_entries)
 
+@app.route('/view/<car_id>')
+def view(car_id):
+    car = CarEntry.query.filter(CarEntry.Id==car_id).first()
+    if car:
+        return render_template('car_view.html',car=car)
+    else:
+        flash('Link is invalid')
+        return redirect(url_for('index'))
+
+
 @app.route('/reload')
 def reload():
     try:
