@@ -1,11 +1,13 @@
 from app import app, car_model, db
 from flask import render_template, redirect, url_for, flash
 from app.model import CarDescription, CarEntry, Booking
+# from app.model import CarImage
+
 
 @app.route('/')
 @app.route('/index')
 def index():
-    cars = CarEntry.query.all()
+    cars = CarEntry.query.order_by(CarEntry.PS.desc()).all()
     return render_template('car_overview.html', cars=cars)
 
 def updateDatabase(Entry, new_list):
@@ -28,8 +30,9 @@ def reload():
         connector.login()
         connector.load_data()
 
-        new_cars, deleted_cars = updateDatabase(CarEntry, connector.car_list)
+        # _, _ = updateDatabase(CarImage, connector.vehicle_detail_data)
         new_descriptions, deleted_descriptions = updateDatabase(CarDescription, connector.car_description)
+        new_cars, deleted_cars = updateDatabase(CarEntry, connector.car_list)
         new_bookings, deleted_bookings = updateDatabase(Booking, connector.bookings)
 
         db.session.commit()
