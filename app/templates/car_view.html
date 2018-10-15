@@ -35,5 +35,12 @@
     <div class="row">
         <p>Dieses Fahrzeug ist aktuell {{ car.bookings | length }} mal gebucht.</p>
     </div>
+    <div class="row">
+        {% if car.watches %}
+        <p><a href="{{ url_for('unwatch', car_id=car.Id) }}" >Dieses Fahrzeug nicht mehr beobachten</a></p>
+        {% else %}
+        <p><a href="{{ url_for('watch', car_id=car.Id) }}" >Dieses Fahrzeug beobachten</a></p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

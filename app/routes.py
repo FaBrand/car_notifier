@@ -1,13 +1,13 @@
 from app import app, car_model, db
 from flask import render_template, redirect, url_for, flash
-from app.model import CarDescription, CarEntry, Booking, CarImage
+from app.model import CarDescription, CarEntry, Booking, CarImage, Watch
 
 
 @app.route('/')
 @app.route('/index')
 def index():
     cars = CarEntry.query.order_by(CarEntry.PS.desc()).all()
-    return render_template('car_overview.html', cars=cars)
+    return render_template('car_overview.html', cars=cars, watches=Watch.query.all())
 
 def updateDatabase(Entry, new_list):
     current_entries = {Entry.FromJson(js) for js in new_list}
@@ -26,43 +26,76 @@ def updateDatabase(Entry, new_list):
 def view(car_id):
     car = CarEntry.query.filter(CarEntry.Id==car_id).first()
     if car:
-        return render_template('car_view.html',car=car)
+        return render_template('car_view.html',car=car, watches=Watch.query.all())
     else:
         flash('Link is invalid')
         return redirect(url_for('index'))
 
+@app.route('/watch/<car_id>')
+def watch(car_id):
+    car = CarEntry.query.filter(CarEntry.Id==car_id).first()
+    if car:
+        watch = Watch.query.filter(Watch.car_id==car.Id).first()
+        if not watch:
+            new_watch = Watch(car=car)
+            db.session.add(new_watch)
+            db.session.commit()
+            flash('Now watching {}'.format(car.description.shortDescr))
+        else:
+            flash('Already watching {}'.format(car.description.shortDescr))
+        return redirect(url_for('view', car_id=car.Id))
+    else:
+        flash('Link is invalid')
+        return redirect(url_for('index'))
 
-@app.route('/reload')
-def reload():
+@app.route('/unwatch/<car_id>')
+def unwatch(car_id):
+    car = CarEntry.query.filter(CarEntry.Id==car_id).first()
+    if car:
+        watches = car.watches
+        if watches:
+            db.session.delete(watches[0])
+            db.session.commit()
+            flash('Not watching {} anymore'.format(car.description.shortDescr))
+        else:
+            flash('Not watching {} already'.format(car.description.shortDescr))
+
+        return redirect(url_for('view', car_id=car.Id))
+    else:
+        flash('Link is invalid')
+        return redirect(url_for('index'))
+
+@app.route('/watchlist')
+def watchlist():
+    cars = [w.car for w in Watch.query.all()]
+    return render_template('car_overview.html', cars=cars, watches=Watch.query.all())
+
+@app.route('/check')
+def check():
     try:
         connector = car_model.BmwRent()
         connector.login()
         connector.load_data()
 
-        _, _ = updateDatabase(CarImage, connector.vehicle_detail_data)
+        updateDatabase(CarImage, connector.vehicle_detail_data)
         new_descriptions, deleted_descriptions = updateDatabase(CarDescription, connector.car_description)
         new_cars, deleted_cars = updateDatabase(CarEntry, connector.car_list)
         new_bookings, deleted_bookings = updateDatabase(Booking, connector.bookings)
-
+        for dc in deleted_cars:
+            if dc.watches:
+                db.session.delete(dc.watches[0])
         db.session.commit()
 
         if new_descriptions:
             flash('Added {} new descriptions'.format(len(new_descriptions)))
-        else:
-            flash('Now new descriptions found')
 
         if new_cars:
             flash('Added {} new car objects'.format(len(new_cars)))
-        else:
-            flash('No new cars found')
 
         if new_bookings:
             flash('Added {} new bookings'.format(len(new_bookings)))
-        else:
-            flash('No new bookings found')
 
     except Exception as e:
         raise e
         flash('Error during reload: {}'.format(e))
     return redirect(url_for('index'))
-

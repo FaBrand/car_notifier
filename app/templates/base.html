@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 <div class="container">
   <a class="navbar-brand" href="{{ url_for('index') }}">
-      <img src="https://mm-portal.bmw-on-demand.de/resources/pictures/stuffrent/logo.png" alt="" height="40">
+      <a class="nav-link" href="{{ url_for('check') }}"><img src="https://mm-portal.bmw-on-demand.de/resources/pictures/stuffrent/logo.png" alt="" height="40"></a>
   </a>
 
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,7 +13,11 @@
     <div class="navbar-nav">
         <ul class="navbar-nav mr-auto pull-left">
             <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Overview</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('reload') }}">Reload</a></li>
+            {% if watches %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('watchlist') }}">Watchlist <span class="badge badge-light">{{ watches|length }}</span></a></li>
+            {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('watchlist') }}">Watchlist</a></li>
+            {% endif %}
         </ul>
     </div>
   </div>
@@ -38,10 +42,4 @@
 
 {% block scripts %}
     {{ super() }}
-<script>
-    $(function () {
-        $('[data-toggle="popover"]').popover()
-    }()
-    )
-</script>
 {% endblock %}

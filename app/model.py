@@ -43,6 +43,7 @@ class CarEntry(db.Model):
     fuelType = db.Column(db.String(120))
     PS = db.Column(db.Float)
     bookings = db.relationship('Booking', backref='car')
+    watches = db.relationship('Watch', backref='car')
 
     def __eq__(self, other):
         return self.Id == other.Id
@@ -131,3 +132,7 @@ class Booking(db.Model):
         element.CheckInPositionId = int(json['CheckInPositionId'])
         return element
 
+
+class Watch(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    car_id = db.Column(db.Integer, db.ForeignKey('car_entry.Id'))
