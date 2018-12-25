@@ -1,7 +1,7 @@
 # Stage 0 - Build App
 FROM node as builder
 
-ADD ./frontend/car-notifier-app /usr/src/app
+ADD ./car-notifier-app /usr/src/app
 WORKDIR /usr/src/app
 
 RUN npm set progress=false && npm install
