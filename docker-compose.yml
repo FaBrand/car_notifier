@@ -10,11 +10,15 @@ services:
       - "80:80"
     volumes:
       - ./backend/nginx/nginx.conf:/etc/nginx/nginx.conf
-    links:
-      - backend
+    networks:
+     - web_nw
   backend:
     build:
       context:
         ./backend
-    ports:
-      - "5000:5000"
+    networks:
+     - web_nw
+
+networks:
+  web_nw:
+    driver: bridge
