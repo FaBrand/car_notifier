@@ -1,13 +1,17 @@
 # Stage 0 - Build App
-FROM node as builder
+FROM node:alpine as builder
+RUN npm set progress=false && npm install -g @angular/cli
 
-ADD ./car-notifier-app /usr/src/app
 WORKDIR /usr/src/app
 
-RUN npm set progress=false && npm install
+ADD ./car-notifier-app/package.json /usr/src/app
+ADD ./car-notifier-app/package-lock.json /usr/src/app
+
+ADD ./car-notifier-app /usr/src/app
+RUN ng build --aot
 
 # Stage 1 - nginx server
-FROM nginx as server
+FROM nginx:alpine as server
 ENV site=car_notifier
 
 RUN rm -rf /var/www/
@@ -16,8 +20,4 @@ RUN mkdir -p /var/www/$site/html
 
 COPY --from=builder /usr/src/app/dist/car-notifier-app/* /var/www/$site/html/
 
-ADD ./nginx/conf/sites-available/$site /etc/nginx/sites-available/$site
-ADD ./nginx/conf/nginx.conf /etc/nginx/nginx.conf
-
 EXPOSE 80 443
-
