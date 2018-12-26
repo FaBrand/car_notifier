@@ -1,3 +1,5 @@
+import { CarDescription } from './car_description';
+
 export class Car {
     Kilowatt: number;
     PS: number;
@@ -5,7 +7,7 @@ export class Car {
     classificationGroupingId: number;
     classificationManufacturerId: number;
     classificationManufacturerTypeId: number;
-    description: number;
+    description: CarDescription;
     fuelType: string;
     image: number;
     price: number;
