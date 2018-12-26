@@ -3,7 +3,6 @@ from app.model import CarEntry, Booking, CarDescription, CarImage, Watch
 from app.car_model import *
 from pprint import pprint
 
-
 @app.shell_context_processor
 def make_shell_context():
     return {

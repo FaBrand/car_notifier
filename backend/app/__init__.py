@@ -10,4 +10,5 @@ bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+
 from app import routes, car_model, model
