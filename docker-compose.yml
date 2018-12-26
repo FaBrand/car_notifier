@@ -10,25 +10,34 @@ services:
       - "80:80"
     volumes:
       - ./backend/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./backend/app/app.db:/var/db_data/app.db
     environment:
-      - DATABASE_URL=sqlite:///var/db_data/app.db
+      - DATABASE_URL=postgresql://testusr:password@postgres:5432/testdb
     networks:
      - web_nw
   backend:
-    # depends_on:
-    #   - db
     build:
       context:
         ./backend
+    volumes:
+      - ./migrations:/var/app/migrations
+    depends_on:
+      - postgres
     networks:
      - web_nw
      - db_nw
-  # TODO Use postgres db instead of sqlite
-  # db:
-  #   image: "postgres:9.6.5"
-  #   networks:
-  #     - db_nw
+  postgres:
+    restart: always
+    image: postgres:10
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - ./postgres-data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - db_nw
 
 networks:
   web_nw:

@@ -118,7 +118,7 @@ class Booking(db.Model):
         element = cls()
         element.Id = int(json['Id'])
         element.bufferCi = ToDateTime(json['bufferCi'])
-        element.ClassificationId = json['ClassificationId']
+        element.ClassificationId = int(json['ClassificationId']) if json['ClassificationId'].isdigit() else 0
         element.ResourceId = int(json['ResourceId'])
         element.originCi = ToDateTime(json['originCi'])
         element.CheckInStationId = int(json['CheckInStationId'])

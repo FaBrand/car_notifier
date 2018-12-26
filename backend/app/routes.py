@@ -1,5 +1,5 @@
 from app import app, car_model, db
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, jsonify
 from app.model import CarDescription, CarEntry, Booking, CarImage, Watch
 
 
@@ -77,10 +77,16 @@ def check():
         connector.login()
         connector.load_data()
 
-        updateDatabase(CarImage, connector.vehicle_detail_data)
+        updateDatabase(CarImage,connector.vehicle_detail_data)
         new_descriptions, deleted_descriptions = updateDatabase(CarDescription, connector.car_description)
         new_cars, deleted_cars = updateDatabase(CarEntry, connector.car_list)
+        existing_car_ids = {c.Id for c in CarEntry.query.all()}
         new_bookings, deleted_bookings = updateDatabase(Booking, connector.bookings)
+
+        # Remove bookings that refer to an invalid car id
+        for inconsistent in {bkg for bkg in new_bookings if bkg.ResourceId not in existing_car_ids}:
+            db.session.expunge(inconsistent)
+
         for dc in deleted_cars:
             if dc.watches:
                 db.session.delete(dc.watches[0])
@@ -92,10 +98,14 @@ def check():
         if new_cars:
             flash('Added {} new car objects'.format(len(new_cars)))
 
-        if new_bookings:
-            flash('Added {} new bookings'.format(len(new_bookings)))
+        # if new_bookings:
+        #     flash('Added {} new bookings'.format(len(new_bookings)))
 
     except Exception as e:
         raise e
         flash('Error during reload: {}'.format(e))
     return redirect(url_for('index'))
+
+@app.route('/api')
+def api():
+    return jsonify({'status': True})
