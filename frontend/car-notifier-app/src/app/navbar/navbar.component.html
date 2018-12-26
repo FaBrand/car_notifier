@@ -1,0 +1,18 @@
+<nav class="navbar navbar-light bg-light navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" [routerLink]="['/']" >BmwRent</a>
+
+        <button class="navbar-toggler navbar-toggler-right" type="button" (click)="navbarCollapsed = !navbarCollapsed"
+                                                            [attr.aria-expanded]="!navbarCollapsed" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse" [ngbCollapse]="navbarCollapsed" id="navbarContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" [routerLink]="['/cars']" (click)="navbarCollapsed = true">Overview</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
