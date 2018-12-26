@@ -1,6 +1,7 @@
 from app import app, car_model, db
-from flask import render_template, redirect, url_for, flash, jsonify
+from flask import render_template, redirect, url_for, flash, jsonify, request
 from app.model import CarDescription, CarEntry, Booking, CarImage, Watch
+from app.schemas import *
 
 
 @app.route('/')
@@ -108,4 +109,18 @@ def check():
 
 @app.route('/api')
 def api():
+    return redirect(url_for('api_v1'))
+
+@app.route('/api/v1')
+def api_v1():
     return jsonify({'status': True})
+
+@app.route('/api/v1/cars')
+def cars_api():
+    id = request.args.get('id')
+    if id is None:
+        all_cars = CarEntry.query.all()
+        return car_entry_schemas.jsonify(all_cars)
+    else:
+        car = CarEntry.query.filter(CarEntry.Id==id).first()
+        return car_entry_schema.jsonify(car)
