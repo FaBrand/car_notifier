@@ -4,7 +4,7 @@
             <mat-card-title class="car-card-content">{{ car.description.code }}</mat-card-title>
             <mat-card-subtitle>{{ car.price }}&euro;</mat-card-subtitle>
         </mat-card-header>
-        <img mat-card-image src="https://cosy.bmwgroup.com/ams/cosySec?COSY-EU-100-3836JNPLHK1dnoQiKPXgM5QOmIUZDYPmTPwTPhf4tukRHJYDLx8L86ZaeNaR0XPpCXhfrceNaR6rxpsT98DLxfLXCDA50dmTPodDh94tuQfE3%25jhpQKPX1YTfTfQDA527mTPiXHvY4tu6h2mTPEoPsYODA5X0P4xTDxK1dm8hdLmTH4JXU84xaDRXQ%25DL9soPI3sZdeQTd7ehUCbxxBCXuK3LkxKP5m8ZV3mTH4JhM84xaDRXlkDL9so1bxsZdeQIxLehUCbdZ6CXuK3UZNKP5m8uh1mTH4J52Q4xaDRH1xDL9soaX0sZdeQ9AZehUCbd6NCXuK3UFNKP5m8uYHmTH4J5L34xaDRHX8DL9soa%25QsZdeQY36ehUCb0LhCXuK3j65KP5m8E5HmTH4JBHI4xaDR7FTDL9soFXtsZdeQYXaehUCb0uTCXuK3j5dKP5m8xR0mTH4JL8h4xaDRZjtDL9sohhHsZdeQXXRehUCbPPdCXuK3TTiKP5m8xxhmTH4JLLv4xaDRZX%25DL9soh%25XsZdeQXnuehUCbo8uCXuK3QhRKP5m8bX7mTH4J3ZQ4xaDR8JYDL9soJ0dsZdeQt3ZehUCbAjhCXuK36bYKP5m8NULmTH4J2tj4xaDR1f0DL9sojJgsZLeYhNweNaQ4xT1Qev4tuJCXh5phoZvmIUR9WzmTPa0VK1d3sZLLwLKxeNau4xTwC29bDLxJK1d3" alt="Product image">
+        <img mat-card-image [src]="car.image.outside_small" alt="Product image">
         <mat-card-content class="car-card-content">
             <p>
             {{ car.description.wwwDescr }}

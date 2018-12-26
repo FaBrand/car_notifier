@@ -1,4 +1,5 @@
 import { CarDescription } from './car_description';
+import { CarImage } from './car_image';
 
 export class Car {
     Kilowatt: number;
@@ -9,7 +10,7 @@ export class Car {
     classificationManufacturerTypeId: number;
     description: CarDescription;
     fuelType: string;
-    image: number;
+    image: CarImage;
     price: number;
     registrationNumber: string;
     stationId: number;
