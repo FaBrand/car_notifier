@@ -1,6 +1,6 @@
 .car-card {
   border-radius: 5px;
-  max-width: calc(10% - 2 * 0.6em);
+  width: calc(10% - 2 * 0.6em);
   margin:0.5em;
   padding-top:0;
   padding-left:0;
