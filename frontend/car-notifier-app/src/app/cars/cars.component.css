@@ -1,0 +1,45 @@
+.car-card {
+  border-radius: 5px;
+  max-width: calc(10% - 2 * 0.6em);
+  margin:0.5em;
+  padding-top:0;
+  padding-left:0;
+  padding-right:0;
+}
+
+.car-card mat-card-title {
+  padding: 5px 5px;
+  margin-bottom: 0;
+}
+
+.car-card mat-card-content {
+  padding:1em;
+}
+.car-card img{
+  margin:0;
+  width:100%;
+}
+
+.car-card mat-card-actions button {
+  margin-left: 20px;
+  text-transform: uppercase;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* Column Gap */
+.cardList > * {
+  box-sizing: border-box;
+}
+.cardList > *:not(:last-child) {
+  margin-right: 32px;
+}
+/* Item sizing */
+.cardListItem {
+  flex: 0 1 calc(33.3% - 32px);
+}

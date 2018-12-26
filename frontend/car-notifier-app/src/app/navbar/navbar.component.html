@@ -1,6 +1,8 @@
-<nav class="navbar navbar-light bg-light navbar-expand-lg">
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" [routerLink]="['/']" >BmwRent</a>
+        <a class="navbar-brand" [routerLink]="['/']" >
+            <img height="40" src="https://mm-portal.bmw-on-demand.de/resources/pictures/stuffrent/logo.png">
+        </a>
 
         <button class="navbar-toggler navbar-toggler-right" type="button" (click)="navbarCollapsed = !navbarCollapsed"
                                                             [attr.aria-expanded]="!navbarCollapsed" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
