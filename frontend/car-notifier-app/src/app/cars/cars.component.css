@@ -7,11 +7,6 @@
   padding-right:0;
 }
 
-.car-card mat-card-title {
-  padding: 5px 5px;
-  margin-bottom: 0;
-}
-
 .car-card mat-card-content {
   padding:1em;
 }
