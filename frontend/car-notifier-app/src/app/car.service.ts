@@ -13,11 +13,12 @@ const httpOptions = {
 })
 export class CarService {
 
-  private carsUrl = "api/cars"; // URL to web api
+  private carsUrl = "http://127.0.0.1:5000/api/v1/cars"; // URL to web api
 
   getCars(): Observable<Car[]> {
     return this.http.get<Car[]>(this.carsUrl).pipe(
       tap(_ => this.log("fetched heroes")),
+      tap(cars => console.log(cars)),
       catchError(this.handleError("getHeroes", []))
     );
   }
@@ -37,7 +38,7 @@ export class CarService {
 
   /** Log a HeroService message with the MessageService */
   private log(message: string) {
-    console.log(message)
+    console.log(message);
   }
 
   constructor(
