@@ -10,21 +10,23 @@ services:
       - "80:80"
     volumes:
       - ./backend/nginx/nginx.conf:/etc/nginx/nginx.conf
-    environment:
-      - DATABASE_URL=postgresql://testusr:password@postgres:5432/testdb
     networks:
      - web_nw
+
   backend:
     build:
       context:
         ./backend
     volumes:
       - ./migrations:/var/app/migrations
+    environment:
+      - DATABASE_URL=postgresql://testusr:password@postgres:5432/testdb
     depends_on:
       - postgres
     networks:
      - web_nw
      - db_nw
+
   postgres:
     restart: always
     image: postgres:10

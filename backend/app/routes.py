@@ -98,8 +98,8 @@ def check():
         if new_cars:
             flash('Added {} new car objects'.format(len(new_cars)))
 
-        # if new_bookings:
-        #     flash('Added {} new bookings'.format(len(new_bookings)))
+        if new_bookings:
+            flash('Added {} new bookings'.format(len(new_bookings)))
 
     except Exception as e:
         raise e

@@ -1,8 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 source venv/bin/activate
-flask db init
-flask db migrate
+
 while true; do
     flask db upgrade
     if [[ "$?" == "0" ]]; then
