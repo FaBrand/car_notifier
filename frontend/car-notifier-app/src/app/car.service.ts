@@ -13,7 +13,7 @@ const httpOptions = {
 })
 export class CarService {
 
-  private carsUrl = "http://127.0.0.1:5000/api/v1/cars"; // URL to web api
+  private carsUrl = "/api/v1/cars"; // URL to web api
 
   getCars(): Observable<Car[]> {
     return this.http.get<Car[]>(this.carsUrl).pipe(

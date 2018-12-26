@@ -8,7 +8,7 @@ ADD ./car-notifier-app/package.json /usr/src/app
 ADD ./car-notifier-app/package-lock.json /usr/src/app
 
 ADD ./car-notifier-app /usr/src/app
-RUN ng build --aot
+RUN ng build --aot --prod
 
 # Stage 1 - nginx server
 FROM nginx:alpine as server
