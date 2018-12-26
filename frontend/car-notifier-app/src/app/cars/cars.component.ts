@@ -14,20 +14,6 @@ export class CarsComponent implements OnInit {
 
   getCars(): void {
     this.carService.getCars().subscribe(cars => this.cars = cars);
-    // this.cars = [
-    //   {id: 1 , description: 'Car-description', price: 49.99, name: 'M140i'},
-    //   {id: 2 , description: 'Car-description', price: 49.99, name: 'i8'},
-    //   {id: 2 , description: 'Car-description', price: 49.99, name: 'i8'},
-    //   {id: 2 , description: 'Car-description', price: 49.99, name: 'i8'},
-    //   {id: 1 , description: 'Car-description', price: 49.99, name: 'M140i'},
-    //   {id: 2 , description: 'Car-description', price: 49.99, name: 'i8'},
-    //   {id: 2 , description: 'Car-description', price: 49.99, name: 'i8'},
-    //   {id: 2 , description: 'Car-description', price: 49.99, name: 'i8'},
-    //   {id: 1 , description: 'Car-description', price: 49.99, name: 'M140i'},
-    //   {id: 2 , description: 'Car-description', price: 49.99, name: 'i8'},
-    //   {id: 2 , description: 'Car-description', price: 49.99, name: 'i8'},
-    //   {id: 2 , description: 'Car-description', price: 49.99, name: 'i8'},
-    // ];
   }
 
   ngOnInit() {
