@@ -9,16 +9,9 @@ RUN npm install
 
 COPY ./car-notifier-app /app
 
-RUN ng build --aot --prod
+RUN ng build --aot --prod --output-path dist
 
 # Stage 1 - nginx server
-FROM nginx:alpine as server
-ENV site=car_notifier
+FROM node:alpine as site_Data
 
-RUN rm -rf /var/www/
-RUN rm -rf /usr/share/nginx/html
-RUN mkdir -p /var/www/$site/html
-
-COPY --from=builder /app/dist/car-notifier-app/* /var/www/$site/html/
-
-EXPOSE 80 443
+COPY --from=builder /app/dist/* /app/site-data/
