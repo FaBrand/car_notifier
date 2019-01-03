@@ -1,5 +1,5 @@
 from app import app, car_model, db
-from flask import render_template, redirect, url_for, flash, jsonify, request
+from flask import render_template, redirect, url_for, flash, jsonify, request, abort
 from app.model import CarDescription, CarEntry, Booking, CarImage, Watch
 from app.schemas import *
 
@@ -71,27 +71,34 @@ def watchlist():
     cars = [w.car for w in Watch.query.all()]
     return render_template('car_overview.html', cars=cars, watches=Watch.query.all())
 
+def update():
+    connector = car_model.BmwRent()
+    connector.login()
+    connector.load_data()
+
+    updateDatabase(CarImage,connector.vehicle_detail_data)
+    new_descriptions, deleted_descriptions = updateDatabase(CarDescription, connector.car_description)
+    new_cars, deleted_cars = updateDatabase(CarEntry, connector.car_list)
+    existing_car_ids = {c.Id for c in CarEntry.query.all()}
+    new_bookings, deleted_bookings = updateDatabase(Booking, connector.bookings)
+
+    # Remove bookings that refer to an invalid car id
+    for inconsistent in {bkg for bkg in new_bookings if bkg.ResourceId not in existing_car_ids}:
+        db.session.expunge(inconsistent)
+
+    for dc in deleted_cars:
+        if dc.watches:
+            db.session.delete(dc.watches[0])
+    db.session.commit()
+
+    return new_descriptions, deleted_descriptions, \
+           new_cars, deleted_cars, \
+           new_bookings, deleted_bookings
+
 @app.route('/check')
 def check():
     try:
-        connector = car_model.BmwRent()
-        connector.login()
-        connector.load_data()
-
-        updateDatabase(CarImage,connector.vehicle_detail_data)
-        new_descriptions, deleted_descriptions = updateDatabase(CarDescription, connector.car_description)
-        new_cars, deleted_cars = updateDatabase(CarEntry, connector.car_list)
-        existing_car_ids = {c.Id for c in CarEntry.query.all()}
-        new_bookings, deleted_bookings = updateDatabase(Booking, connector.bookings)
-
-        # Remove bookings that refer to an invalid car id
-        for inconsistent in {bkg for bkg in new_bookings if bkg.ResourceId not in existing_car_ids}:
-            db.session.expunge(inconsistent)
-
-        for dc in deleted_cars:
-            if dc.watches:
-                db.session.delete(dc.watches[0])
-        db.session.commit()
+        new_descriptions, deleted_descriptions, new_cars, deleted_cars, new_bookings, deleted_bookings = update()
 
         if new_descriptions:
             flash('Added {} new descriptions'.format(len(new_descriptions)))
@@ -114,6 +121,15 @@ def api():
 @app.route('/api/v1')
 def api_v1():
     return jsonify({'status': True})
+
+@app.route('/api/v1/update')
+def api_update():
+    try:
+        update()
+        return jsonify({'success': True})
+    except Exception as e:
+        abort(500)
+        abort('Error fetching new cars: {}'.format(str(e)))
 
 @app.route('/api/v1/cars')
 def cars_api():
