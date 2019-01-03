@@ -7,7 +7,7 @@ import { CarService } from '../car.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  public navbarCollapsed = false;
+  public navbarCollapsed = true;
 
   constructor(private carService: CarService ) { }
 

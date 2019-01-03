@@ -1,11 +1,11 @@
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+<nav class="navbar navbar-dark bg-dark navbar-fixed-top navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" [routerLink]="['/']" >
+        <a class="navbar-brand" [routerLink]="['/']">
             <img height="40" src="https://mm-portal.bmw-on-demand.de/resources/pictures/stuffrent/logo.png">
         </a>
 
         <button class="navbar-toggler navbar-toggler-right" type="button" (click)="navbarCollapsed = !navbarCollapsed"
-                                                            [attr.aria-expanded]="!navbarCollapsed" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            [attr.aria-expanded]="!navbarCollapsed" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -14,8 +14,8 @@
                 <li class="nav-item" [routerLinkActive]="['active']">
                     <a class="nav-link" [routerLink]="['/cars']" (click)="navbarCollapsed = true">Overview</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" [routerLink]="['/cars']" (click)="updateList()">Update</a>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" [routerLink]="['/cars']" (click)="updateList();navbarCollapsed = true">Update</a>
                 </li>
             </ul>
         </div>
