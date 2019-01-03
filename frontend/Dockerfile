@@ -2,12 +2,13 @@
 FROM node:alpine as builder
 RUN npm set progress=false && npm install -g @angular/cli
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-ADD ./car-notifier-app/package.json /usr/src/app
-ADD ./car-notifier-app/package-lock.json /usr/src/app
+COPY ./car-notifier-app/package*.json /app/
+RUN npm install
 
-ADD ./car-notifier-app /usr/src/app
+COPY ./car-notifier-app /app
+
 RUN ng build --aot --prod
 
 # Stage 1 - nginx server
@@ -18,6 +19,6 @@ RUN rm -rf /var/www/
 RUN rm -rf /usr/share/nginx/html
 RUN mkdir -p /var/www/$site/html
 
-COPY --from=builder /usr/src/app/dist/car-notifier-app/* /var/www/$site/html/
+COPY --from=builder /app/dist/car-notifier-app/* /var/www/$site/html/
 
 EXPOSE 80 443
