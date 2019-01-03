@@ -108,6 +108,5 @@ app.db
 
 
 .idea
-*.json
 *.har
 postgres-data
