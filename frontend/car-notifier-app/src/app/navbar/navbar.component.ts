@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CarService } from '../car.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +9,12 @@ import { Component, OnInit } from '@angular/core';
 export class NavbarComponent implements OnInit {
   public navbarCollapsed = false;
 
-  constructor() { }
+  constructor(private carService: CarService ) { }
+
+  updateList() {
+    console.log('Updating!');
+    this.carService.update();
+  }
 
   ngOnInit() {
   }

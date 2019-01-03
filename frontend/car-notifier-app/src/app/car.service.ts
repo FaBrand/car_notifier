@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, of } from "rxjs";
 import { catchError, map, tap } from "rxjs/operators";
 import { Car } from './car';
+import { environment } from './../environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({ "Content-Type": "application/json" })
@@ -13,14 +14,22 @@ const httpOptions = {
 })
 export class CarService {
 
-  private carsUrl = "/api/v1/cars"; // URL to web api
+  private carsUrl = environment.apiUrl + "/cars"; // URL to web api
+  private updateUrl = environment.apiUrl + "/update"; // URL to web api
 
   getCars(): Observable<Car[]> {
+    console.log(this.carsUrl);
     return this.http.get<Car[]>(this.carsUrl).pipe(
-      tap(_ => this.log("fetched heroes")),
+      tap(_ => this.log("Fetched cars")),
       tap(cars => console.log(cars)),
-      catchError(this.handleError("getHeroes", []))
+      catchError(this.handleError("getCars", []))
     );
+  }
+
+  update() {
+    this.http.post(this.updateUrl, {}).pipe(
+      tap(_ => this.log("Updated car list"))
+    ).subscribe();
   }
 
   private handleError<T>(operation = "operation", result?: T) {

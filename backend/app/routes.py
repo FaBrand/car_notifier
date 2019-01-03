@@ -122,7 +122,7 @@ def api():
 def api_v1():
     return jsonify({'status': True})
 
-@app.route('/api/v1/update')
+@app.route('/api/v1/update',methods = ['POST'])
 def api_update():
     try:
         update()
